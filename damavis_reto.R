@@ -1,13 +1,3 @@
-# variable declaration
-board = c(3,4) # rows x columns
-snake = list(c(2,2), 
-          c(2,3), 
-          c(1,3),
-          c(0,3),
-          c(0,2),
-          c(0,1),
-          c(0,0))
-
 # move snake across the board
 updateSnake = function(snake, cell)
 {
@@ -32,7 +22,7 @@ allowedCells = function(snake, board)
   for(i in c(-1,1))
   {
     # row movement
-    if(i + snake[[1]][1] >= 0 && i + snake[[1]][1] < board[1])
+    if(i + snake[[1]][1] >= 0 && i + snake[[1]][1] <= board[1])
     {
       if(list(c(i + snake[[1]][1], snake[[1]][2])) %in% snake == FALSE)
       {
@@ -41,7 +31,7 @@ allowedCells = function(snake, board)
     }
     
     # column movement
-    if(i + snake[[1]][2] >= 0 && i + snake[[1]][2] < board[2])
+    if(i + snake[[1]][2] >= 0 && i + snake[[1]][2] <= board[2])
     {
       if(list(c(snake[[1]][1], i + snake[[1]][2])) %in% snake == FALSE)
       {
@@ -53,7 +43,40 @@ allowedCells = function(snake, board)
   return(possible_cells)
 }
 
-# numberOfAvailableDifferentPaths = function(board, snake, depth)
-# {
-# 
-# }
+numberOfAvailableDifferentPaths = function(board, snake, depth)
+{
+  result = 0
+  
+  if(depth == 0)
+  {
+    return(1)
+  }
+  else
+  {
+    # print(snake)
+    allowed = allowedCells(snake, board)
+    for(c in allowed)
+    {
+      # print(allowedCells(snake, board))
+      result = result + numberOfAvailableDifferentPaths(board, updateSnake(snake, c), depth-1) 
+    }
+  }
+  
+  return(result)
+}
+
+#### TEST 1
+board = c(4,3) # columns x rows
+snake = list(c(2,2),c(3,2), c(3,1), c(3,0), c(2,0), c(1,0), c(0,0))
+numberOfAvailableDifferentPaths(board, snake, 3)
+
+#### TEST 2
+board=c(2,3)
+snake= list( c(0,2), c(0,1), c(0,0), c(1,0), c(1,1), c(1,2))
+numberOfAvailableDifferentPaths(board, snake, 10)
+
+#### TEST 3
+board=c(10,10)
+snake= list( c(5,5), c(5,4), c(4,4), c(4,5) )
+numberOfAvailableDifferentPaths(board, snake, 4)
+
