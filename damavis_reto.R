@@ -19,6 +19,8 @@ allowedCells = function(snake, board)
 {
   possible_cells = list()
   
+  # the movements happen simultaneously
+  # so the head could take the place of the tail
   for(i in c(-1,1))
   {
     # row movement
@@ -26,7 +28,7 @@ allowedCells = function(snake, board)
     if(row_move >= 0 && row_move < board[1])
     {
       # check if there is self-intersection
-      if(list(c(row_move, snake[[1]][2])) %in% snake == FALSE)
+      if(list(c(row_move, snake[[1]][2])) %in% snake[1:length(snake)-1] == FALSE)
       {
         possible_cells = append(possible_cells, list(c(row_move, snake[[1]][2])))
       }
@@ -37,7 +39,7 @@ allowedCells = function(snake, board)
     if(col_move >= 0 && col_move < board[2])
     {
       # check if there is self-intersection
-      if(list(c(snake[[1]][1], col_move)) %in% snake == FALSE)
+      if(list(c(snake[[1]][1], col_move)) %in% snake[1:length(snake)-1] == FALSE)
       {
         possible_cells = append(possible_cells, list(c(snake[[1]][1], col_move)))
       }
@@ -52,12 +54,16 @@ numberOfAvailableDifferentPaths = function(board, snake, depth)
 {
   result = 0
   
+  # if there are no more movements to do, then the path has reach the end and
+  # return back to check more paths
   if(depth == 0)
   {
     return(1)
   }
   else
   {
+    # for each available cell where the snake can move into, the 
+    # recursive call will be made.
     allowed_cells = allowedCells(snake, board)
     for(c in allowed_cells)
     {
@@ -85,7 +91,7 @@ test3 = numberOfAvailableDifferentPaths(board, snake, 4)
 
 print(c(test1, test2, test3))
 
-#### TEST ADICIONALES
+#### ADITIONAL TESTS
 board = c(2,6)
 snake = list( c(0,2), c(0,1), c(0,0) ) 
 test4 = numberOfAvailableDifferentPaths(board, snake, 2)
